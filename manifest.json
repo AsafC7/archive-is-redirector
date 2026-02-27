@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Archive.is Redirector",
+  "version": "1.0",
+  "description": "Automatically redirects pages to Archive.is snapshots.",
+  "permissions": ["storage", "declarativeNetRequest", "contextMenus", "tabs"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "options_page": "options.html",
+  "action": {
+    "default_title": "Archive this page"
+  }
+}
