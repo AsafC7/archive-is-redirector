@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     'enabled', 'mode', 'onlyOnClicks', 'exclusions', 'inclusions'
   ]);
 
-  elements.enabled.checked = settings.enabled !== false; // Default: true
-  elements.onlyOnClicks.checked = settings.onlyOnClicks !== false; // Default: true
+  elements.enabled.checked = settings.enabled === true; // Default: false
+  elements.onlyOnClicks.checked = settings.onlyOnClicks === true; // Default: false
   elements.mode.value = settings.mode || 'viewer';
   elements.exclusions.value = (settings.exclusions || []).join('\n');
   elements.inclusions.value = (settings.inclusions || []).join('\n');

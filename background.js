@@ -1,7 +1,7 @@
 const DEFAULT_SETTINGS = {
-  enabled: true,
-  mode: 'viewer', // 'viewer' or 'capture'
-  onlyOnClicks: true,
+  enabled: false,       // OFF by default — use right-click menu or toolbar button instead
+  mode: 'viewer',       // 'viewer' or 'capture'
+  onlyOnClicks: false,  // content.js interception also off by default
   exclusions: [],
   inclusions: []
 };
@@ -16,14 +16,18 @@ const ARCHIVE_DOMAINS = [
   'archive.vn'
 ];
 
-// --- One-time migration: fix stale onlyOnClicks: false from the bad original default ---
-// We use a version flag in storage. If it hasn't been set, we force onlyOnClicks to true
-// (the correct default) so existing users who never opened Options get the fix automatically.
+// --- Storage migrations ---
+// Bump _schemaVersion here whenever defaults need to be force-corrected.
 async function runMigrationsIfNeeded() {
   const { _schemaVersion } = await chrome.storage.sync.get('_schemaVersion');
-  if (!_schemaVersion || _schemaVersion < 2) {
-    // Force onlyOnClicks to true (correct default). This overwrites the old bad default.
-    await chrome.storage.sync.set({ onlyOnClicks: true, _schemaVersion: 2 });
+  if (!_schemaVersion || _schemaVersion < 3) {
+    // v3: Disable ALL automatic redirection. Extension should only work via
+    // right-click context menu and toolbar button — no background redirects.
+    await chrome.storage.sync.set({
+      enabled: false,
+      onlyOnClicks: false,
+      _schemaVersion: 3
+    });
   }
 }
 
