@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Archive settings</title>
+    <title>Open in Archive</title>
     <style>
       :root {
         color-scheme: light dark;
@@ -176,7 +176,7 @@
   <body>
     <main>
       <header>
-        <h1>Archive settings</h1>
+        <h1>Open in Archive</h1>
         <span id="status" role="status"></span>
       </header>
       <form id="settings" inert>
@@ -216,7 +216,10 @@
         </div>
         <button type="button" id="edit-shortcut">Edit shortcut</button>
       </div>
-      <footer>Tracking parameters (utm_*, fbclid…) are removed before archiving.</footer>
+      <footer>
+        Tracking parameters (utm_*, fbclid…) are removed before archiving.<br>
+        Fresh snapshots are public. Do not use them on private or logged-in links.
+      </footer>
     </main>
     <script src="options.js" defer></script>
   </body>
