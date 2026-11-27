@@ -1,46 +1,43 @@
-# Archive.is Redirector Extension
+<p align="center"><img src="icons/icon128.png" width="96" alt=""></p>
 
-A Manifest V3 extension for Chrome/Brave/Chromium that automatically redirects web pages to Archive.is snapshots.
+<h1 align="center">Archive.is Redirector</h1>
+
+<p align="center">Open any page or link in <a href="https://archive.ph">archive.today</a> with one click. Chrome and Brave, Manifest V3.</p>
 
 ## Features
 
-- **Automatic Redirection**: Top-level navigations to http/https pages are redirected to Archive.is.
-- **Loop Prevention**: Automatically ignores archive domains (archive.is, archive.today, etc.) to prevent infinite loops.
-- **Custom Lists**: Support for domain exclusion and inclusion lists.
-- **Modern Redirection Modes**:
-  - **Viewer**: Redirects to the most recent snapshot.
-  - **Capture**: Forces archive.is to take a new snapshot.
-- **Click-Only Mode**: Option to only redirect when clicking links (ignoring typed URLs or programmatic navigations).
-- **Context Menus**: Right-click any link or the page to open in Archive.is.
-- **Toolbar Button**: Click the extension icon to archive the current tab URL in a new tab.
+- **One click:** the toolbar icon opens the latest snapshot of the current page, in a tab right next to it.
+- **Keyboard:** `Alt+Shift+A` does the same.
+- **Right-click:** open a page or a link in the archive, or save a fresh snapshot.
+- **Clean links:** tracking parameters (`utm_*`, `fbclid`, `gclid` and others) are removed first, so existing snapshots are found more often.
+- **Settings:** latest or fresh snapshot, mirror (`archive.ph`, `archive.is`, `archive.today`), and where to open (new tab, background tab, same tab). Changes save automatically. Light and dark themes.
 
-## Installation
+## Privacy
 
-1.  Open Brave (or any Chromium browser).
-2.  Navigate to `brave://extensions/` (or `chrome://extensions/`).
-3.  Enable **Developer mode** (toggle in the top right).
-4.  Click **Load unpacked**.
-5.  Select the `archive_extension` folder containing these files.
+The extension has no server and collects nothing. It asks for three permissions:
 
-## Permissions Explanation
+| Permission | Why |
+| --- | --- |
+| `activeTab` | Read the current tab's URL, only when you click the icon, press the shortcut, or use the menu. |
+| `contextMenus` | Add the right-click items. |
+| `storage` | Save your settings. |
 
-- `storage`: Required to save user preferences, exclusion, and inclusion lists.
-- `declarativeNetRequest`: Used for high-performance, privacy-respecting automatic redirection of main frame requests.
-- `contextMenus`: Used to add "Open via archive.is" options to the right-click menu.
-- `tabs`: Required to open new tabs for context menu and toolbar button actions.
-- `<all_urls>` (Host Permissions): Required to detect and redirect navigations on all http/https websites.
+It cannot read or change pages you visit.
 
-## How Settings Work
+## Install
 
-- **Exclusion List**: If a domain (or subdomain) is in this list, it will NEVER be redirected automatically.
-- **Inclusion List**: If this list is NOT empty, ONLY the listed domains will be redirected.
-- **Mode**: "Viewer" is best for quick reading; "Capture" is best for archiving live content.
+1. Download or clone this repository.
+2. Open `chrome://extensions` (or `brave://extensions`) and turn on **Developer mode**.
+3. Click **Load unpacked** and select the folder that contains `manifest.json`.
 
-## Known Limitations
+## Development
 
-- **Captcha**: If Archive.is requires a captcha, you will still need to solve it manually in the redirected tab.
-- **Redirection Rules**: Changes to settings are applied immediately to the background service worker.
+Plain JavaScript, no build step and no dependencies. The URL logic lives in `url.js`. Test it with:
 
-## Icons
+```sh
+node url.test.mjs
+```
 
-This extension uses the default browser icon for the action. You can add `icon16.png`, `icon48.png`, and `icon128.png` to the folder and update `manifest.json` if you wish to have custom branding.
+## License
+
+MIT

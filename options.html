@@ -1,186 +1,223 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Archive.is Redirector Options</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Archive settings</title>
     <style>
       :root {
-        --primary: #2563eb;
-        --bg: #f8fafc;
-        --card: #ffffff;
-        --text: #1e293b;
-        --border: #e2e8f0;
+        color-scheme: light dark;
+        font: 14px/1.45 system-ui, sans-serif;
+        --canvas: #f1f4fa;
+        --card: #fff;
+        --text: #18243a;
+        --muted: #4e5d75;
+        --line: #ccd5e3;
+        --track: #ebeff6;
+        --accent: #1d4ed8;
+        --selected: #e2eaff;
+        --status: #146044;
+        --status-bg: #e5f5ed;
       }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --canvas: #111723;
+          --card: #192130;
+          --text: #edf2fc;
+          --muted: #b4c1d6;
+          --line: #3e4c63;
+          --track: #222d40;
+          --accent: #b1c6ff;
+          --selected: #2b416c;
+          --status: #a6ebcc;
+          --status-bg: #203f37;
+        }
+      }
+
+      * { box-sizing: border-box; }
+
       body {
-        font-family:
-          "Inter",
-          -apple-system,
-          sans-serif;
-        background-color: var(--bg);
-        color: var(--text);
-        display: flex;
-        justify-content: center;
-        padding: 2rem;
-      }
-      .container {
-        background: var(--card);
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         width: 100%;
-        max-width: 500px;
-        border: 1px solid var(--border);
+        min-width: 320px;
+        margin: 0;
+        padding: 12px;
+        background: var(--canvas);
+        color: var(--text);
       }
-      h1 {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-        color: var(--primary);
+
+      main {
+        max-width: 420px;
+        margin: auto;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--card);
       }
-      .section {
-        margin-bottom: 1.5rem;
-      }
-      label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-      }
-      .row {
+
+      header, .shortcut-row, .shortcut-label {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1rem;
+        gap: 8px;
       }
-      select,
-      textarea {
-        width: 100%;
-        padding: 0.5rem;
-        border: 1px solid var(--border);
+
+      header, .shortcut-row { justify-content: space-between; }
+
+      h1 {
+        margin: 0;
+        font-size: 1.25rem;
+        letter-spacing: -0.02em;
+      }
+
+      #status:not(:empty) {
+        padding: 3px 8px;
         border-radius: 6px;
-        font-family: inherit;
-        box-sizing: border-box;
-      }
-      textarea {
-        height: 80px;
-        resize: vertical;
-        margin-top: 0.5rem;
-      }
-      .hint {
-        font-size: 0.8rem;
-        color: #64748b;
-        margin-top: 0.25rem;
-      }
-      .toggle {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 24px;
-      }
-      .toggle input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #cbd5e1;
-        transition: 0.4s;
-        border-radius: 24px;
-      }
-      .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: 0.4s;
-        border-radius: 50%;
-      }
-      input:checked + .slider {
-        background-color: var(--primary);
-      }
-      input:checked + .slider:before {
-        transform: translateX(20px);
-      }
-      button {
-        background-color: var(--primary);
-        color: white;
-        border: none;
-        padding: 0.75rem 1.5rem;
-        border-radius: 6px;
+        background: var(--status-bg);
+        color: var(--status);
         font-weight: 600;
-        cursor: pointer;
-        width: 100%;
-        transition: background 0.2s;
       }
-      button:hover {
-        background-color: #1d4ed8;
+
+      form {
+        display: grid;
+        gap: 12px;
+        margin: 14px 0;
       }
-      #status {
-        margin-top: 1rem;
+
+      fieldset {
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+
+      legend, .field-label {
+        display: block;
+        margin-bottom: 5px;
+        padding: 0;
+        font-weight: 650;
+      }
+
+      .segments {
+        display: flex;
+        gap: 3px;
+        padding: 3px;
+        border-radius: 8px;
+        background: var(--track);
+      }
+
+      .segments input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: 0;
+        clip-path: inset(50%);
+      }
+
+      .segments label {
+        flex: 1;
+        padding: 6px 4px;
+        border: 1px solid transparent;
+        border-radius: 6px;
         text-align: center;
-        font-size: 0.9rem;
-        height: 1.2rem;
+        white-space: nowrap;
+        cursor: pointer;
       }
+
+      .segments label:hover, button:hover { background: var(--track); }
+      .segments label:hover { border-color: var(--line); }
+
+      .segments input:checked + label {
+        border-color: var(--accent);
+        background: var(--selected);
+        color: var(--accent);
+        font-weight: 650;
+      }
+
+      select, button, kbd {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        color: var(--text);
+        font: inherit;
+      }
+
+      select, button {
+        padding: 6px 8px;
+        background: var(--card);
+      }
+
+      select { width: 100%; }
+      button { cursor: pointer; }
+
+      :is(select, button):focus-visible,
+      .segments input:focus-visible + label {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .shortcut-row {
+        flex-wrap: wrap;
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+      }
+
+      kbd {
+        padding: 2px 5px;
+        background: var(--track);
+      }
+
+      footer {
+        margin-top: 10px;
+        color: var(--muted);
+      }
+
+      #status, kbd, footer { font-size: 0.85rem; }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Archive.is Settings</h1>
-
-      <div class="section row">
-        <label for="enabled">Enable Auto-Redirect</label>
-        <label class="toggle">
-          <input type="checkbox" id="enabled" />
-          <span class="slider"></span>
-        </label>
-      </div>
-
-      <div class="section">
-        <label for="mode">Redirection Mode</label>
-        <select id="mode">
-          <option value="viewer">Viewer (Archive Snapshot)</option>
-          <option value="capture">Capture (Force New Snapshot)</option>
-        </select>
-        <div class="hint">
-          Viewer redirects to existing snapshots if available.
+    <main>
+      <header>
+        <h1>Archive settings</h1>
+        <span id="status" role="status"></span>
+      </header>
+      <form id="settings" inert>
+        <fieldset>
+          <legend>Mode</legend>
+          <div class="segments">
+            <input type="radio" id="viewer" name="mode" value="viewer" checked>
+            <label for="viewer">Latest snapshot</label>
+            <input type="radio" id="capture" name="mode" value="capture">
+            <label for="capture">Fresh snapshot</label>
+          </div>
+        </fieldset>
+        <div>
+          <label class="field-label" for="mirror">Mirror</label>
+          <select id="mirror" name="mirror">
+            <option value="archive.ph">archive.ph</option>
+            <option value="archive.is">archive.is</option>
+            <option value="archive.today">archive.today</option>
+          </select>
         </div>
-      </div>
-
-      <div class="section row">
-        <label for="onlyOnClicks">Only redirect on link clicks</label>
-        <label class="toggle">
-          <input type="checkbox" id="onlyOnClicks" />
-          <span class="slider"></span>
-        </label>
-        <div class="hint" style="width: 100%; margin-top: 0">
-          If ON, typed URLs won't redirect.
+        <fieldset>
+          <legend>Open in</legend>
+          <div class="segments">
+            <input type="radio" id="new-tab" name="openIn" value="tab" checked>
+            <label for="new-tab">New tab</label>
+            <input type="radio" id="background-tab" name="openIn" value="background">
+            <label for="background-tab">Background tab</label>
+            <input type="radio" id="same-tab" name="openIn" value="same">
+            <label for="same-tab">Same tab</label>
+          </div>
+        </fieldset>
+      </form>
+      <div class="shortcut-row">
+        <div class="shortcut-label">
+          <strong>Shortcut</strong>
+          <kbd id="shortcut">…</kbd>
         </div>
+        <button type="button" id="edit-shortcut">Edit shortcut</button>
       </div>
-
-      <div class="section">
-        <label for="exclusions">Exclusion List (One domain per line)</label>
-        <textarea
-          id="exclusions"
-          placeholder="example.com&#10;other.org"
-        ></textarea>
-        <div class="hint">Always excludes archive.is and related domains.</div>
-      </div>
-
-      <div class="section">
-        <label for="inclusions">Inclusion List (Optional)</label>
-        <textarea id="inclusions" placeholder="news-site.com"></textarea>
-        <div class="hint">If set, ONLY these domains will redirect.</div>
-      </div>
-
-      <button id="save">Save Settings</button>
-      <div id="status"></div>
-    </div>
-    <script src="options.js"></script>
+      <footer>Tracking parameters (utm_*, fbclid…) are removed before archiving.</footer>
+    </main>
+    <script src="options.js" defer></script>
   </body>
 </html>

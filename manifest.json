@@ -1,23 +1,38 @@
 {
   "manifest_version": 3,
   "name": "Archive.is Redirector",
-  "version": "1.0",
-  "description": "Automatically redirects pages to Archive.is snapshots.",
-  "permissions": ["storage", "declarativeNetRequest", "contextMenus", "tabs"],
-  "host_permissions": ["http://*/*", "https://*/*"],
+  "version": "2.0",
+  "description": "Open the latest archive.today snapshot of a page or link, or request a fresh one.",
+  "permissions": ["activeTab", "contextMenus", "storage"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["content.js"],
-      "run_at": "document_start",
-      "all_frames": false
-    }
-  ],
-  "options_page": "options.html",
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "action": {
-    "default_title": "Archive this page"
+    "default_title": "Open in archive (Alt+Shift+A)",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+A"
+      },
+      "description": "Open the current page in archive"
+    }
   }
 }
