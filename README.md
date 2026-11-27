@@ -37,3 +37,7 @@ Plain JavaScript, no build step and no dependencies. The URL logic lives in `url
 ```sh
 node url.test.mjs
 ```
+
+## License
+
+MIT
