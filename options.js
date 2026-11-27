@@ -1,48 +1,55 @@
-// options.js
+const form = document.querySelector('#settings');
+const status = document.querySelector('#status');
+const shortcut = document.querySelector('#shortcut');
+let statusTimer;
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const elements = {
-    enabled: document.getElementById('enabled'),
-    mode: document.getElementById('mode'),
-    onlyOnClicks: document.getElementById('onlyOnClicks'),
-    exclusions: document.getElementById('exclusions'),
-    inclusions: document.getElementById('inclusions'),
-    saveBtn: document.getElementById('save'),
-    status: document.getElementById('status')
-  };
+async function loadSettings() {
+  try {
+    const settings = await chrome.storage.sync.get(['mode', 'mirror', 'openIn']);
+    for (const [name, value] of Object.entries(settings)) {
+      form.elements.namedItem(name).value = value;
+    }
+  } catch {
+    showStatus('Could not load settings');
+  } finally {
+    form.inert = false;
+  }
+}
 
-  // Load current settings from storage
-  const settings = await chrome.storage.sync.get([
-    'enabled', 'mode', 'onlyOnClicks', 'exclusions', 'inclusions'
-  ]);
+function showStatus(message) {
+  clearTimeout(statusTimer);
+  status.textContent = message;
+  if (message === 'Saved') {
+    statusTimer = setTimeout(() => { status.textContent = ''; }, 1500);
+  }
+}
 
-  elements.enabled.checked = settings.enabled === true; // Default: false
-  elements.onlyOnClicks.checked = settings.onlyOnClicks === true; // Default: false
-  elements.mode.value = settings.mode || 'viewer';
-  elements.exclusions.value = (settings.exclusions || []).join('\n');
-  elements.inclusions.value = (settings.inclusions || []).join('\n');
-
-  // Save settings
-  elements.saveBtn.addEventListener('click', async () => {
-    const newSettings = {
-      enabled: elements.enabled.checked,
-      mode: elements.mode.value,
-      onlyOnClicks: elements.onlyOnClicks.checked,
-      exclusions: elements.exclusions.value
-        .split('\n')
-        .map(s => s.trim().toLowerCase().replace(/^www\./, ''))
-        .filter(s => s.length > 0),
-      inclusions: elements.inclusions.value
-        .split('\n')
-        .map(s => s.trim().toLowerCase().replace(/^www\./, ''))
-        .filter(s => s.length > 0)
-    };
-
-    await chrome.storage.sync.set(newSettings);
-    
-    elements.status.textContent = 'Settings saved!';
-    setTimeout(() => {
-      elements.status.textContent = '';
-    }, 2000);
-  });
+form.addEventListener('change', async ({ target }) => {
+  try {
+    await chrome.storage.sync.set({ [target.name]: target.value });
+    showStatus('Saved');
+  } catch {
+    showStatus('Could not save');
+  }
 });
+
+async function updateShortcut() {
+  try {
+    const commands = await chrome.commands.getAll();
+    shortcut.textContent = commands.find(({ name }) => name === '_execute_action')?.shortcut || 'Not set';
+  } catch {
+    shortcut.textContent = 'Unavailable';
+  }
+}
+
+document.querySelector('#edit-shortcut').addEventListener('click', async () => {
+  try {
+    await chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
+  } catch {
+    showStatus('Could not open shortcuts');
+  }
+});
+
+window.addEventListener('focus', updateShortcut);
+loadSettings();
+updateShortcut();
