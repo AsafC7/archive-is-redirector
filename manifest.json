@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Archive.is Redirector",
-  "version": "2.0",
+  "name": "Open in Archive",
+  "version": "2.1",
   "description": "Open the latest archive.today snapshot of a page or link, or request a fresh one.",
   "permissions": ["activeTab", "contextMenus", "storage"],
   "background": {
@@ -19,7 +19,7 @@
     "128": "icons/icon128.png"
   },
   "action": {
-    "default_title": "Open in archive (Alt+Shift+A)",
+    "default_title": "Open in archive",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",

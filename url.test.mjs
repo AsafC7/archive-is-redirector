@@ -3,6 +3,11 @@ import { buildArchiveUrl, cleanUrl, isArchiveHost } from './url.js';
 
 assert.equal(cleanUrl('https://example.com/story#section'), 'https://example.com/story');
 assert.equal(cleanUrl('https://example.com/story?#section'), 'https://example.com/story');
+assert.equal(cleanUrl('https://example.com/#/article/42'), 'https://example.com/#/article/42');
+assert.equal(
+  cleanUrl('https://example.com/?tag=keep&utm_source=drop#!/post/7?utm_source=keep'),
+  'https://example.com/?tag=keep#!/post/7?utm_source=keep'
+);
 
 const trackers = [
   'utm_source', 'UTM_medium', '%75tm_campaign', 'fbclid', 'gclid', 'dclid',
@@ -28,6 +33,10 @@ const url = 'https://example.com/story?tag=a%20b&fbclid=123#top';
 assert.equal(
   buildArchiveUrl(url, 'viewer', 'archive.ph'),
   'https://archive.ph/newest/https://example.com/story?tag=a%20b'
+);
+assert.equal(
+  buildArchiveUrl('https://example.com/?utm_source=drop#/article/42', 'viewer', 'archive.ph'),
+  'https://archive.ph/newest/https://example.com/%23/article/42'
 );
 assert.equal(
   buildArchiveUrl(url, 'capture', 'archive.today'),
